@@ -5,12 +5,13 @@
 package model.validador;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  *
  * @author helenas
  */
 public interface IImportador {
-    
-    void carregarArquivo(File arquivo);
+    void carregarArquivo(File arquivo) throws FileNotFoundException, IOException;
 }
