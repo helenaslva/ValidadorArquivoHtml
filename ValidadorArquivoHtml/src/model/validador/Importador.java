@@ -44,4 +44,8 @@ public class Importador implements IImportador{
         } 
     }
     
+    public ListaEstaticaGenerica getLista(){
+        return lista; 
+    }
+    
 }
