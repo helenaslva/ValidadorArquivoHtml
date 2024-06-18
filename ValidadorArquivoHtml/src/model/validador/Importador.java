@@ -4,6 +4,7 @@
  */
 package model.validador;
 
+import model.validador.Interfaces.IImportador;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,17 +13,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.structures.ListaGenerica.ListaEstaticaGenerica;
+import model.structures.ListaEncadeada.ListaEncadeada;
+
 
 /**
  *
  * @author helenas
  */
 public class Importador implements IImportador{
-    private ListaEstaticaGenerica<String> lista; 
+    private ListaEncadeada<String> lista; 
     
     public Importador() {
-        this.lista = new ListaEstaticaGenerica(); 
+        this.lista = new ListaEncadeada<>(); 
     }
 
     /**
@@ -44,7 +46,7 @@ public class Importador implements IImportador{
         } 
     }
     
-    public ListaEstaticaGenerica getLista(){
+    public ListaEncadeada getLista(){
         return lista; 
     }
     
