@@ -21,10 +21,10 @@ import model.structures.ListaEncadeada.ListaEncadeada;
  * @author helenas
  */
 public class Importador implements IImportador{
-    private ListaEncadeada<String> lista; 
+    private ListaEncadeada<Linha> lista; 
     
     public Importador() {
-        this.lista = new ListaEncadeada<>(); 
+        this.lista = new ListaEncadeada<Linha>(); 
     }
 
     /**
@@ -36,12 +36,13 @@ public class Importador implements IImportador{
     @Override
     public void carregarArquivo(File arquivo) throws FileNotFoundException, IOException {
          try(Scanner sc = new Scanner(arquivo, "UTF-8")){  
-          
+            int contador = 1;
             while(sc.hasNextLine()){
                 String linha = sc.nextLine();
                 if(!linha.equals("")){
-                   lista.inserir(linha); 
+                   lista.inserir(new Linha(contador, linha)); 
                 }  
+                contador++;
             }
         } 
     }

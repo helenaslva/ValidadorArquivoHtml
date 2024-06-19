@@ -10,6 +10,13 @@ package model.validador;
  */
 public class Linha {
 
+    public Linha(int numero, String conteudo) {
+        this.numero = numero;
+        this.conteudo = conteudo;
+    }
+    private int numero;
+    private String conteudo; 
+
     public Linha(int numero) {
         this.numero = numero;
     }
@@ -22,6 +29,11 @@ public class Linha {
         this.numero = numero;
     }
     
-    private int numero;
-    
+    public String getConteudo() {
+        return conteudo;
+    }
+
+    public void setConteudo(String conteudo) {
+        this.conteudo = conteudo;
+    }
 }

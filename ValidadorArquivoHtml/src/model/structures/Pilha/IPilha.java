@@ -8,6 +8,14 @@ package model.structures.Pilha;
  *
  * @author helenas
  */
-public interface IPilha {
-    
+public interface IPilha<T> {
+        void push(T v);
+	
+	T pop ();
+	
+	T peek();
+	
+	boolean estaVazia();
+	
+	void liberar();
 }

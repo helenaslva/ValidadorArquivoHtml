@@ -31,8 +31,16 @@ public class main {
             System.out.println("Erro de E/S: " + e.getMessage());
         }
         
-        ListaEncadeada<String> lista = imp.getLista();
+        ListaEncadeada<Linha> lista = imp.getLista();
         
-        System.out.println(lista.toString());
+        
+        Validador valid = new Validador();
+        
+        valid.populaPilhaComTags(lista);
+        valid.validarArquivoHtml();
+        //valid.exibirPilha();
+        
+        
+        //System.out.println(lista.toString());
     }
 }
