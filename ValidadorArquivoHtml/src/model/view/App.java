@@ -4,7 +4,7 @@
  */
 package model.view;
 
-import Servico.ServicoArquivo;
+import model.Servico.ServicoArquivo;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
