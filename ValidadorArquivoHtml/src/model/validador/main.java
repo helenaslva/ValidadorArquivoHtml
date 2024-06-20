@@ -42,6 +42,7 @@ public class main {
         //valid.exibirPilha();
         //System.out.println();
         valid.exibirPilhaTagsInvalidas();
+       
         
         
       

@@ -4,13 +4,17 @@ package model.validador;
 import model.structures.Pilha.Pilha;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import model.structures.ListaEncadeada.ListaEncadeada;
+import model.structures.ListaEncadeada.NoLista;
 
 public class Validador {
     private Pilha<Tag> pilha;
     private Pilha<Tag> tagsInvalidas;
+    private ListaEncadeada<TagContagem> todasTags; 
     public Validador() {
         this.pilha = new Pilha<>();
         this.tagsInvalidas = new Pilha<>();
+        this.todasTags = new ListaEncadeada();
     }
 
     public Pilha<Tag> getPilha() {
@@ -44,6 +48,8 @@ public class Validador {
                     Tag tag = new Tag(tagNome, linhaAtual.getNumero(), ehFechamento);
                     validarTags(ehFechamento, tag, pilha);
                 }
+                
+                atualizarContagemDeTags(tagNome);
             }
         }
         
@@ -74,6 +80,18 @@ public class Validador {
             pilha.push(tag);
         }
     }
+    
+     private void atualizarContagemDeTags(String tagNome) {
+        NoLista<TagContagem> atual = todasTags.getPrimeiro();
+        while (atual != null) {
+            if (atual.getInfo().getNome().equals(tagNome)) {
+                atual.getInfo().incrementar();
+                return;
+            }
+            atual = atual.getProximo();
+        }
+        todasTags.inserir(new TagContagem(tagNome));
+    }
 
     public void exibirPilha() {
         while (!pilha.estaVazia()) {
@@ -87,6 +105,10 @@ public class Validador {
             Tag tag = tagsInvalidas.pop();
             System.out.println((tag.isEhFechamento() ? "Fechamento" : "Abertura") + " da tag: " + tag.getNome() + " na linha: " + tag.getLinha());
         }
+    }
+    
+    public ListaEncadeada retornarListaTags(){
+        return this.todasTags;
     }
     
     public Pilha inverterPilha(Pilha<Linha> pilha) {
