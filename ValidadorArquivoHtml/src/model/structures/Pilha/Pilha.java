@@ -50,6 +50,17 @@ public class Pilha<T> implements IPilha<T>{
     public String toString() {
         return lista.toString();
     }
+    
+    public Pilha inverterPilha() {
+        Pilha<T> pilhaInvertida = new Pilha<>();
+
+        while (!this.estaVazia()) {
+            pilhaInvertida.push((T)this.pop());
+        }
+
+        return pilhaInvertida;
+
+    }
 	
 }
 

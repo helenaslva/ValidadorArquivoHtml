@@ -14,6 +14,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.structures.ListaEncadeada.ListaEncadeada;
+import model.structures.Pilha.Pilha;
 
 
 /**
@@ -21,10 +22,10 @@ import model.structures.ListaEncadeada.ListaEncadeada;
  * @author helenas
  */
 public class Importador implements IImportador{
-    private ListaEncadeada<Linha> lista; 
+    private Pilha<Linha> pilhaLinhas; 
     
     public Importador() {
-        this.lista = new ListaEncadeada<Linha>(); 
+        this.pilhaLinhas = new Pilha<>(); 
     }
 
     /**
@@ -40,15 +41,15 @@ public class Importador implements IImportador{
             while(sc.hasNextLine()){
                 String linha = sc.nextLine();
                 if(!linha.equals("")){
-                   lista.inserir(new Linha(contador, linha)); 
+                   pilhaLinhas.push(new Linha(contador, linha));  
                 }  
                 contador++;
             }
         } 
     }
     
-    public ListaEncadeada getLista(){
-        return lista; 
+    public Pilha getPilha(){
+        return pilhaLinhas;
     }
     
 }
