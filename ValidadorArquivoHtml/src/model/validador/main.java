@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import model.structures.ListaEncadeada.ListaEncadeada;
+import model.structures.Pilha.Pilha;
 
 /**
  *
@@ -31,16 +32,18 @@ public class main {
             System.out.println("Erro de E/S: " + e.getMessage());
         }
         
-        ListaEncadeada<Linha> lista = imp.getLista();
+        Pilha<Linha> pilha = imp.getPilha();
         
         
         Validador valid = new Validador();
         
-        valid.populaPilhaComTags(lista);
-        valid.validarArquivoHtml();
+     
+        System.out.println(valid.validarHtml(pilha));
         //valid.exibirPilha();
+        //System.out.println();
+        valid.exibirPilhaTagsInvalidas();
         
         
-        //System.out.println(lista.toString());
+      
     }
 }

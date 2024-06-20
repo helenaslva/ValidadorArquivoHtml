@@ -1,30 +1,32 @@
 package model.validador;
 
-import model.structures.ListaEncadeada.ListaEncadeada;
-import model.structures.ListaEncadeada.NoLista;
+
 import model.structures.Pilha.Pilha;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Validador {
     private Pilha<Tag> pilha;
-
+    private Pilha<Tag> tagsInvalidas;
     public Validador() {
         this.pilha = new Pilha<>();
+        this.tagsInvalidas = new Pilha<>();
     }
 
     public Pilha<Tag> getPilha() {
         return pilha;
     }
 
-    public void populaPilhaComTags(ListaEncadeada<Linha> lista) {
-        NoLista<Linha> noAtual = lista.getPrimeiro();
-
+    public String validarHtml (Pilha<Linha> pilhaLinhaBlablabla) {
+        String mensagem = " ";
         Pattern pattern = Pattern.compile("</?([a-zA-Z]+).*?/?>");
-
-        while (noAtual != null) {
-            String conteudo = noAtual.getInfo().getConteudo();
+        Pilha<Linha> pilhaLinha = inverterPilha(pilhaLinhaBlablabla);
+        
+        while (!pilhaLinha.estaVazia()) {
+            Linha linhaAtual = pilhaLinha.pop();
+            String conteudo = linhaAtual.getConteudo();
             Matcher matcher = pattern.matcher(conteudo);
+
 
             while (matcher.find()) {
                 String tagCompleta = matcher.group();
@@ -33,18 +35,43 @@ public class Validador {
                 boolean ehSingleton = tagCompleta.endsWith("/>") || tagCompleta.matches("<(meta|link|img|br|hr|input|source|area|col|embed|param|track|wbr)(\\s+[^>]*)?>");
 
                 if (ehSingleton) {
-                    // Tags singletons são tanto abertura quanto fechamento
-                    Tag tag = new Tag(tagNome, noAtual.getInfo().getNumero(), false);
-                    pilha.push(tag);
-                    Tag tagFechamento = new Tag(tagNome, noAtual.getInfo().getNumero(), true);
-                    pilha.push(tagFechamento);
+                    // Tags singleton são tanto abertura quanto fechamento
+                    Tag tag = new Tag(tagNome, linhaAtual.getNumero(), false);
+                     validarTags(false, tag, pilha);
+                    Tag tagFechamento = new Tag(tagNome, linhaAtual.getNumero(), true);
+                     validarTags(true, tag, pilha);
                 } else {
-                    Tag tag = new Tag(tagNome, noAtual.getInfo().getNumero(), ehFechamento);
-                    pilha.push(tag);
+                    Tag tag = new Tag(tagNome, linhaAtual.getNumero(), ehFechamento);
+                    validarTags(ehFechamento, tag, pilha);
                 }
             }
-
-            noAtual = noAtual.getProximo();
+        }
+        
+        if(tagsInvalidas.estaVazia()){
+            mensagem = "Arquivo bem formatado, não encontramos nenhum erro!" ;
+        }
+        else{
+            while(!tagsInvalidas.estaVazia()){
+                Tag tag = tagsInvalidas.pop();
+                mensagem += "Tag " + tag.getNome() + " inválida na linha " + tag.getLinha() + "\n";
+            }
+        }
+        
+        return mensagem;
+    }
+    
+    public void validarTags(boolean ehFechamento, Tag tag, Pilha<Tag> pilha){
+        
+        if(ehFechamento){
+            if(pilha.peek().getNome().equals(tag.getNome())){
+                pilha.pop();
+            }
+            else{
+                tagsInvalidas.push(pilha.pop());
+                validarTags(ehFechamento, tag, pilha);
+            }
+        }else{
+            pilha.push(tag);
         }
     }
 
@@ -54,40 +81,24 @@ public class Validador {
             System.out.println((tag.isEhFechamento() ? "Fechamento" : "Abertura") + " da tag: " + tag.getNome() + " na linha: " + tag.getLinha());
         }
     }
-
-    public boolean validarArquivoHtml() {
-        Pilha<Tag> tagsAbertura = new Pilha<>();
-        
-        // Inverte a pilha original para manter a ordem correta
-        Pilha<Tag> pilhaAux = new Pilha<>();
-        while (!pilha.estaVazia()) {
-            pilhaAux.push(pilha.pop());
+    
+    public void exibirPilhaTagsInvalidas() {
+        while (!tagsInvalidas.estaVazia()) {
+            Tag tag = tagsInvalidas.pop();
+            System.out.println((tag.isEhFechamento() ? "Fechamento" : "Abertura") + " da tag: " + tag.getNome() + " na linha: " + tag.getLinha());
         }
-
-        while (!pilhaAux.estaVazia()) {
-            Tag tag = pilhaAux.pop();
-            if (!tag.isEhFechamento()) {
-                tagsAbertura.push(tag);
-            } else {
-                if (tagsAbertura.estaVazia()) {
-                    System.out.println("Erro: tag de fechamento sem correspondente de abertura na linha " + tag.getLinha() + ": " + tag.getNome());
-                    return false;
-                }
-                Tag ultimaAbertura = tagsAbertura.pop();
-                if (!ultimaAbertura.getNome().equals(tag.getNome())) {
-                    System.out.println("Erro: tag de fechamento " + tag.getNome() + " na linha " + tag.getLinha() + " não corresponde à tag de abertura " + ultimaAbertura.getNome() + " na linha " + ultimaAbertura.getLinha());
-                    return false;
-                }
-            }
-        }
-
-        if (!tagsAbertura.estaVazia()) {
-            Tag tag = tagsAbertura.pop();
-            System.out.println("Erro: tag de abertura sem correspondente de fechamento na linha " + tag.getLinha() + ": " + tag.getNome());
-            return false;
-        }
-
-        System.out.println("Arquivo HTML está bem formatado.");
-        return true;
     }
+    
+    public Pilha inverterPilha(Pilha<Linha> pilha) {
+        Pilha<Linha> pilhaInvertida = new Pilha<>();
+
+        while (!pilha.estaVazia()) {
+            pilhaInvertida.push(pilha.pop());
+        }
+
+        return pilhaInvertida;
+
+    }
+
+   
 }
