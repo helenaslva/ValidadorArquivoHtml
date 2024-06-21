@@ -22,7 +22,7 @@ public class Validador {
     }
 
     public String validarHtml (Pilha<Linha> pilhaLinhaBlablabla) {
-        String mensagem = " ";
+        StringBuilder mensagem = new StringBuilder();
         Pattern pattern = Pattern.compile("</?([a-zA-Z]+).*?/?>");
         Pilha<Linha> pilhaLinha = inverterPilha(pilhaLinhaBlablabla);
         
@@ -54,16 +54,17 @@ public class Validador {
         }
         
         if(tagsInvalidas.estaVazia()){
-            mensagem = "Arquivo bem formatado, não encontramos nenhum erro!" ;
+            mensagem.append("Arquivo bem formatado, não encontramos nenhum erro!");
         }
         else{
+            mensagem.append("Arquivo mal formatado. Encontramos os seguintes erros:\n");
             while(!tagsInvalidas.estaVazia()){
                 Tag tag = tagsInvalidas.pop();
-                mensagem += "Tag " + tag.getNome() + " inválida na linha " + tag.getLinha() + "\n";
+                mensagem.append("Tag ").append(tag.getNome()).append(" inválida na linha ").append(tag.getLinha()).append("\n");
             }
         }
         
-        return mensagem;
+        return mensagem.toString();
     }
     
     public void validarTags(boolean ehFechamento, Tag tag, Pilha<Tag> pilha){
