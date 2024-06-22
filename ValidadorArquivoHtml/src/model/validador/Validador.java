@@ -48,11 +48,16 @@ public class Validador {
                     Tag tag = new Tag(tagNome, linhaAtual.getNumero(), ehFechamento);
                     validarTags(ehFechamento, tag, pilha);
                 }
-                
-                atualizarContagemDeTags(tagNome);
+                    atualizarContagemDeTags(tagNome);
             }
+            
         }
         
+        if(!pilha.estaVazia()){
+            while(!pilha.estaVazia()){
+                tagsInvalidas.push(pilha.pop());
+            }
+        }
         if(tagsInvalidas.estaVazia()){
             mensagem.append("Arquivo bem formatado, não encontramos nenhum erro!");
         }
@@ -68,19 +73,26 @@ public class Validador {
     }
     
     public void validarTags(boolean ehFechamento, Tag tag, Pilha<Tag> pilha){
-        
+    
         if(ehFechamento){
-            if(pilha.peek().getNome().equals(tag.getNome())){
+            if(!pilha.estaVazia()){
+                if(pilha.peek().getNome().equals(tag.getNome())){
                 pilha.pop();
-            }
+            } 
+         }
+ 
             else{
                 tagsInvalidas.push(pilha.pop());
-                validarTags(ehFechamento, tag, pilha);
+              
+                    validarTags(ehFechamento, tag, pilha);
+               
             }
         }else{
             pilha.push(tag);
         }
     }
+    
+    
     
      private void atualizarContagemDeTags(String tagNome) {
         NoLista<TagContagem> atual = todasTags.getPrimeiro();
